@@ -17,32 +17,23 @@ import {
 } from "lucide-react";
 
 const Footer = () => {
-  // -------------------- State Variables --------------------
-  // State to manage the email input value for newsletter subscription
   const [email, setEmail] = useState("");
-  // State to check whether the user has successfully subscribed
   const [isSubscribed, setIsSubscribed] = useState(false);
 
-  // -------------------- Animation Variants --------------------
-  // Framer Motion animation variant for fade-in with upward movement
   const fadeInUp = {
-    initial: { opacity: 0, y: 20 }, // Initial state: invisible and slightly lower
-    whileInView: { opacity: 1, y: 0 }, // Animate to: visible and in place
-    viewport: { once: true }, // Animate only once when in viewport
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
   };
 
-  // -------------------- Event Handlers --------------------
-  // Handle newsletter form submission
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent page refresh on submit
+    e.preventDefault();
     if (email) {
-      setIsSubscribed(true); // Show success icon after subscription
-      setEmail(""); // Clear the input field for new entries
+      setIsSubscribed(true);
+      setEmail("");
     }
   };
 
-  // -------------------- Social Media Links --------------------
-  // Array of social media links and associated hover colors
   const socialLinks = [
     { Icon: Facebook, href: "#", color: "hover:bg-blue-600" },
     { Icon: Twitter, href: "#", color: "hover:bg-blue-400" },
@@ -50,8 +41,6 @@ const Footer = () => {
     { Icon: Linkedin, href: "#", color: "hover:bg-blue-700" },
   ];
 
-  // -------------------- Quick Links --------------------
-  // Footer navigation links for quick access to main pages
   const quickLinks = [
     { label: "Home", path: "/" },
     { label: "About Us", path: "/about" },
@@ -60,33 +49,20 @@ const Footer = () => {
     { label: "Contact Us", path: "/contact" },
   ];
 
-  // -------------------- Working Hours --------------------
-  // Array representing the company's working hours for display
   const workingHours = [
     { day: "Mon - Fri", hours: "9:00AM - 9:00PM" },
     { day: "Saturday", hours: "9:00AM - 7:00PM" },
     { day: "Sunday", hours: "10:00AM - 6:00PM" },
   ];
 
-  // -------------------- Footer JSX --------------------
   return (
     <footer className="bg-gray-50 dark:bg-zinc-950 text-gray-600 dark:text-zinc-400 pt-16 pb-8 relative overflow-hidden transition-colors duration-300 border-t border-gray-200 dark:border-zinc-900">
-      {/* -------------------- Background Pattern -------------------- */}
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5 dark:opacity-10 pointer-events-none"></div>
-
-      {/* -------------------- Container -------------------- */}
       <div className="container mx-auto px-4 relative">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          
-          {/* -------------------- Company Info -------------------- */}
-          <motion.div
-            variants={fadeInUp}
-            initial="initial"
-            whileInView="whileInView"
-            viewport={{ once: true }}
-            className="space-y-6">
-            
-            {/* Logo with link to homepage */}
+
+          {/* Company Info */}
+          <motion.div variants={fadeInUp} initial="initial" whileInView="whileInView" viewport={{ once: true }} className="space-y-6">
             <Link to="/" className="flex items-center space-x-2 group">
               <Car className="w-8 h-8 text-orange-500 group-hover:scale-110 transition-transform" />
               <span className="text-2xl font-bold">
@@ -94,97 +70,69 @@ const Footer = () => {
                 <span className="text-orange-500">Rental</span>
               </span>
             </Link>
-
-            {/* Company description */}
             <p className="leading-relaxed">
-              Your trusted partner for car rentals. Experience premium service
-              with unlimited miles and flexible pick-up options at unbeatable
-              prices.
+              Your trusted partner for car rentals. Experience premium service with unlimited miles and flexible pick-up options at unbeatable prices.
             </p>
-
-            {/* -------------------- Social Media Icons -------------------- */}
             <div className="flex space-x-4">
               {socialLinks.map(({ Icon, href, color }, index) => (
                 <motion.a
                   key={index}
-                  href={href} // Social media URL
-                  target="_blank" // Open in new tab
+                  href={href}
+                  target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1 }} // Hover animation
-                  whileTap={{ scale: 0.9 }} // Click animation
-                  className={`w-10 h-10 rounded-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 flex items-center justify-center
-                           ${color} hover:text-white transition-all duration-300 shadow-sm`}>
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className={`w-10 h-10 rounded-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 flex items-center justify-center ${color} hover:text-white transition-all duration-300 shadow-sm`}
+                >
                   <Icon className="w-5 h-5" />
                 </motion.a>
               ))}
             </div>
           </motion.div>
 
-          {/* -------------------- Quick Links -------------------- */}
-          <motion.div
-            variants={fadeInUp}
-            initial="initial"
-            whileInView="whileInView"
-            viewport={{ once: true }}
-            className="space-y-6">
+          {/* Quick Links */}
+          <motion.div variants={fadeInUp} initial="initial" whileInView="whileInView" viewport={{ once: true }} className="space-y-6">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Quick Links</h3>
             <ul className="space-y-3">
               {quickLinks.map((link, index) => (
                 <li key={index}>
-                  {/* Link scrolls to top on click */}
                   <Link
                     to={link.path}
-                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} // Scroll to top
-                    className="group hover:text-orange-500 transition-colors inline-flex items-center space-x-2">
+                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    className="group hover:text-orange-500 transition-colors inline-flex items-center space-x-2"
+                  >
                     <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
                     <span>{link.label}</span>
                   </Link>
                 </li>
               ))}
             </ul>
+            <div className="mt-4 border-t border-gray-200 dark:border-zinc-800"></div>
           </motion.div>
 
-          {/* -------------------- Working Hours -------------------- */}
-          <motion.div
-            variants={fadeInUp}
-            initial="initial"
-            whileInView="whileInView"
-            viewport={{ once: true }}
-            className="space-y-6">
+          {/* Working Hours */}
+          <motion.div variants={fadeInUp} initial="initial" whileInView="whileInView" viewport={{ once: true }} className="space-y-6">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Working Hours</h3>
             <ul className="space-y-4">
               {workingHours.map((schedule, index) => (
                 <li key={index} className="flex items-center space-x-3">
                   <Clock className="w-5 h-5 text-orange-500" />
                   <div>
-                    <span className="block text-sm text-gray-500 dark:text-zinc-500">
-                      {schedule.day}
-                    </span>
+                    <span className="block text-sm text-gray-500 dark:text-zinc-500">{schedule.day}</span>
                     <span className="block text-gray-900 dark:text-white font-medium">{schedule.hours}</span>
                   </div>
                 </li>
               ))}
             </ul>
-
-            {/* -------------------- Contact Info -------------------- */}
             <div className="space-y-4 pt-4 border-t border-gray-200 dark:border-zinc-800">
-              {/* Phone number */}
               <div className="flex items-center space-x-3 group cursor-pointer">
                 <Phone className="w-5 h-5 text-orange-500 group-hover:rotate-12 transition-transform" />
-                <span className="hover:text-orange-500 transition-colors">
-                  +1 234 567 8900
-                </span>
+                <span className="hover:text-orange-500 transition-colors">+1 234 567 8900</span>
               </div>
-
-              {/* Email address */}
               <div className="flex items-center space-x-3 group cursor-pointer">
                 <Mail className="w-5 h-5 text-orange-500 group-hover:scale-110 transition-transform" />
-                <span className="hover:text-orange-500 transition-colors">
-                  info@carrental.com
-                </span>
+                <span className="hover:text-orange-500 transition-colors">info@carrental.com</span>
               </div>
-
-              {/* Physical address */}
               <div className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-orange-500" />
                 <span>123 Car Street, Auto City, AC 12345</span>
@@ -192,72 +140,46 @@ const Footer = () => {
             </div>
           </motion.div>
 
-          {/* -------------------- Newsletter -------------------- */}
-          <motion.div
-            variants={fadeInUp}
-            initial="initial"
-            whileInView="whileInView"
-            viewport={{ once: true }}
-            className="space-y-6">
+          {/* Newsletter */}
+          <motion.div variants={fadeInUp} initial="initial" whileInView="whileInView" viewport={{ once: true }} className="space-y-6">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Newsletter</h3>
-            <p className="text-gray-500 dark:text-zinc-400">
-              Subscribe to our newsletter for the latest updates and exclusive offers.
-            </p>
-
-            {/* Newsletter Form */}
+            <p className="text-gray-500 dark:text-zinc-400">Subscribe to our newsletter for the latest updates and exclusive offers.</p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="relative">
                 <input
                   type="email"
-                  value={email} // Controlled input value
-                  onChange={(e) => setEmail(e.target.value)} // Update state on change
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full px-4 py-3 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 
-                           focus:ring-orange-500 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-600 transition-all shadow-sm"
+                  className="w-full px-4 py-3 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-600 transition-all shadow-sm"
                 />
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-orange-500 
-                           text-white rounded-lg hover:bg-orange-600 transition-all
-                           hover:scale-105 active:scale-95 shadow-lg shadow-orange-500/20">
-                  {/* Show check icon if subscribed, send icon otherwise */}
-                  {isSubscribed ? (
-                    <CheckCircle className="w-5 h-5" />
-                  ) : (
-                    <Send className="w-5 h-5" />
-                  )}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-orange-500/20"
+                >
+                  {isSubscribed ? <CheckCircle className="w-5 h-5" /> : <Send className="w-5 h-5" />}
                 </button>
               </div>
             </form>
-
-            {/* -------------------- Special Offer Banner -------------------- */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="p-4 bg-orange-50 dark:bg-orange-950/20 rounded-lg border border-orange-200 dark:border-orange-900/30">
+              className="p-4 bg-orange-50 dark:bg-orange-950/20 rounded-lg border border-orange-200 dark:border-orange-900/30"
+            >
               <p className="text-sm">
-                🎉{" "}
-                <span className="text-orange-600 dark:text-orange-400 font-semibold">
-                  Special Offer:
-                </span>{" "}
-                <span className="text-gray-700 dark:text-zinc-300">Get 15% off your first rental!</span>
+                🎉 <span className="text-orange-600 dark:text-orange-400 font-semibold">Special Offer:</span> 
+                <span className="text-gray-700 dark:text-zinc-300"> Get 15% off your first rental!</span>
               </p>
             </motion.div>
           </motion.div>
+
         </div>
 
-        {/* -------------------- Bottom Bar -------------------- */}
-        <motion.div
-          variants={fadeInUp}
-          initial="initial"
-          whileInView="whileInView"
-          viewport={{ once: true }}
-          className="mt-16 pt-8 border-t border-gray-200 dark:border-zinc-800 text-center">
-          {/* Copyright Text */}
+        {/* Bottom Bar */}
+        <motion.div variants={fadeInUp} initial="initial" whileInView="whileInView" viewport={{ once: true }} className="mt-16 pt-8 border-t border-gray-200 dark:border-zinc-800 text-center">
           <p className="text-gray-500 dark:text-zinc-500 text-sm">
-            © {new Date().getFullYear()} CarRental. All rights reserved. Built
-            with ❤️ for a better car rental experience.
+            © {new Date().getFullYear()} CarRental. All rights reserved. Built with ❤️ for a better car rental experience.
           </p>
         </motion.div>
       </div>
