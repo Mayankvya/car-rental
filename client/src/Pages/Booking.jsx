@@ -137,36 +137,97 @@ const CarDetailPage = () => {
             </span>
           </p>
 
-          <div className="flex items-center space-x-3 mb-6">
-            <span className="text-2xl font-semibold text-gray-500">
-              {selectedCar.rating}
-            </span>
-            <span className="text-sm text-gray-500">
-              ({selectedCar.reviews} reviews)
-            </span>
-          </div>
+             {/* Rating Section */}
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="flex items-center space-x-1">
+                <span className="text-2xl font-semibold text-gray-500 dark:text-zinc-400">{selectedCar.rating}</span>
+                <div className="flex text-sm text-yellow-500">
+                  {[...Array(5)].map((_, index) => (
+                    <svg
+                      key={index}
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill={index < Math.floor(selectedCar.rating) ? "currentColor" : "none"}
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      className="h-5 w-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 17.25l-6.403 3.377 1.233-7.264L1.43 7.642l7.361-.734L12 1.5l3.522 5.377 7.361.734-5.733 5.721 1.233 7.264L12 17.25z"
+                      />
+                    </svg>
+                  ))}
+                </div>
+              </div>
+              <span className="text-sm text-gray-500 dark:text-zinc-500">({selectedCar.reviews} reviews)</span>
+            </div>
 
-          <div className="grid grid-cols-3 gap-4 mb-8">
-            <div className="flex flex-col items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
-              <span className="text-xs">{selectedCar.features.seats} seats</span>
+            {/* Feature Badges */}
+            <div className="grid grid-cols-3 gap-4 mb-8">
+              <div className="flex flex-col items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
+                <div className="text-xl mb-1">🪑</div>
+                <span className="text-xs text-gray-500 dark:text-zinc-400">{selectedCar.features.seats} seats</span>
+              </div>
+              <div className="flex flex-col items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
+                <div className="text-xl mb-1">🧳</div>
+                <span className="text-xs text-gray-500 dark:text-zinc-400">{selectedCar.features.luggage} luggage</span>
+              </div>
+              <div className="flex flex-col items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
+                <div className="text-xl mb-1">⛽</div>
+                <span className="text-xs text-gray-500 dark:text-zinc-400">{selectedCar.features.fuel} fuel</span>
+              </div>
             </div>
-            <div className="flex flex-col items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
-              <span className="text-xs">{selectedCar.features.luggage} luggage</span>
-            </div>
-            <div className="flex flex-col items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
-              <span className="text-xs">{selectedCar.features.fuel} fuel</span>
-            </div>
-          </div>
 
-          {/* BOOKING FORM — UNCHANGED */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input type="datetime-local" name="pickUpDate" value={rentalDetails.pickUpDate} onChange={handleChange} required className="w-full p-3 rounded-lg" />
-            <input type="datetime-local" name="dropOffDate" value={rentalDetails.dropOffDate} onChange={handleChange} required className="w-full p-3 rounded-lg" />
-            <input type="text" name="location" value={rentalDetails.location} onChange={handleChange} required placeholder="Pickup Location" className="w-full p-3 rounded-lg" />
-            <button type="submit" className="w-full py-4 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 transition-all">
-              Confirm Booking Now
-            </button>
-          </form>
+            {/* Booking Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 dark:text-zinc-400 mb-1">Pick-up Date</label>
+                  <input
+                    type="datetime-local"
+                    name="pickUpDate"
+                    value={rentalDetails.pickUpDate}
+                    onChange={handleChange}
+                    className="p-3 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all"
+                    required
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 dark:text-zinc-400 mb-1">Drop-off Date</label>
+                  <input
+                    type="datetime-local"
+                    name="dropOffDate"
+                    value={rentalDetails.dropOffDate}
+                    onChange={handleChange}
+                    className="p-3 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-600 dark:text-zinc-400 mb-1">Pickup Location</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={rentalDetails.location}
+                  onChange={handleChange}
+                  placeholder="e.g. Airport Terminal 1"
+                  className="p-3 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 focus:ring-2 focus:ring-orange-500 outline-none transition-all"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="mt-4 w-full py-4 bg-orange-500 text-white font-bold rounded-lg shadow-lg shadow-orange-500/30 hover:bg-orange-600 transition-all transform active:scale-95"
+              >
+                Confirm Booking Now
+              </button>
+            </form>
         </div>
       </div>
 
