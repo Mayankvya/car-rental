@@ -37,15 +37,16 @@ const Register = () => {
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-        navigate("/booking");
-      }
-    });
-    return () => unsubscribe();
-  }, [navigate, setUser]);
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setUser(user);
+      navigate("/profile");
+    }
+  });
+  return () => unsubscribe();
+}, [navigate, setUser]);
+
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
