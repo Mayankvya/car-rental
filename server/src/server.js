@@ -1,6 +1,7 @@
 import express from "express";
 import Env from "./env/env.js";
 import mongoose from "mongoose";
+import cors from "cors";
 
 const app = express();
 
