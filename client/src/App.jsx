@@ -10,7 +10,7 @@ import Testimonials from "./Pages/Testimonials";
 import Booking from "./Pages/Booking";
 import Team from "./Pages/Team";
 import Contact from "./Pages/Contact";
-import Errorpage from "./Pages/Errorpage";
+import NotFound from "./Pages/NotFound"; // CHANGED: Errorpage → NotFound
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import LearnMore from "./Pages/LearnMore";
@@ -202,7 +202,7 @@ function App() {
               element={<LearnMore session={sessionFlag} />}
             />
             <Route path="/booking/:id" element={<Booking key={getRandomId()} />} />
-            <Route path="*" element={<Errorpage key={computeValue} />} />
+            <Route path="*" element={<NotFound key={computeValue} />} /> {/* CHANGED: Errorpage → NotFound */}
           </Route>
         </Routes>
       </AnimatePresence>
