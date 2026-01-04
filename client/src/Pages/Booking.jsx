@@ -60,7 +60,10 @@ const resolveCarById = (collection, id) =>
   collection.find((item) => item.id === parseInt(id));
 const excludeActiveCar = (collection, activeId) =>
   collection.filter((item) => item.id !== activeId);
-const isValidDateRange = (start, end) => start < end;
+const isValidDateRange = (start, end) => {
+  if (!start || !end) return true; // Allow empty dates during selection
+  return new Date(start) < new Date(end);
+};
 
 /* ================= Map Component ================= */
 const BookingMap = ({ location, setLocation }) => {
@@ -194,24 +197,87 @@ const CarDetailPage = () => {
     dropOffDate: "",
     location: "",
   });
+  const [dateError, setDateError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const resolved = resolveCarById(cars, id);
     setSelectedCar(resolved);
   }, [id]);
 
+  const handleDateChange = (name, value) => {
+    const updatedDetails = { ...rentalDetails, [name]: value };
+    setRentalDetails(updatedDetails);
+
+    // Validate dates
+    if (updatedDetails.pickUpDate && updatedDetails.dropOffDate) {
+      if (new Date(updatedDetails.dropOffDate) <= new Date(updatedDetails.pickUpDate)) {
+        setDateError("❌ Drop-off date must be after pick-up date");
+      } else {
+        setDateError("");
+      }
+    } else {
+      setDateError(""); // Clear error if one date is empty
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setRentalDetails((prev) => ({ ...prev, [name]: value }));
+    if (name === "pickUpDate" || name === "dropOffDate") {
+      handleDateChange(name, value);
+    } else {
+      setRentalDetails((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Validate dates before submission
     if (!isValidDateRange(rentalDetails.pickUpDate, rentalDetails.dropOffDate)) {
-      alert("Drop-off date must be after pickup date!");
+      setDateError("❌ Drop-off date must be after pick-up date");
       return;
     }
-    alert(`Booking confirmed at ${rentalDetails.location}!`);
+
+    if (!rentalDetails.location) {
+      alert("Please select a location on the map!");
+      return;
+    }
+
+    if (dateError) {
+      return; // Don't proceed if there's an error
+    }
+
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      alert(`✅ Booking confirmed!\n\nCar: ${selectedCar.name}\nPick-up: ${new Date(rentalDetails.pickUpDate).toLocaleString()}\nDrop-off: ${new Date(rentalDetails.dropOffDate).toLocaleString()}\nLocation: ${rentalDetails.location}`);
+      setIsSubmitting(false);
+      
+      // Reset form (optional)
+      setRentalDetails({
+        pickUpDate: "",
+        dropOffDate: "",
+        location: "",
+      });
+      setDateError("");
+    }, 1000);
+  };
+
+  const getMinDropOffDate = () => {
+    if (!rentalDetails.pickUpDate) return "";
+    const pickUpDate = new Date(rentalDetails.pickUpDate);
+    // Add minimum 1 hour gap for drop-off
+    pickUpDate.setHours(pickUpDate.getHours() + 1);
+    return pickUpDate.toISOString().slice(0, 16);
+  };
+
+  const isFormValid = () => {
+    return rentalDetails.pickUpDate && 
+           rentalDetails.dropOffDate && 
+           rentalDetails.location && 
+           !dateError;
   };
 
   const relatedCars = selectedCar
@@ -291,6 +357,7 @@ const CarDetailPage = () => {
                   name="pickUpDate"
                   value={rentalDetails.pickUpDate}
                   onChange={handleChange}
+                  min={new Date().toISOString().slice(0, 16)}
                   className="p-3 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all"
                   required
                 />
@@ -302,11 +369,26 @@ const CarDetailPage = () => {
                   name="dropOffDate"
                   value={rentalDetails.dropOffDate}
                   onChange={handleChange}
-                  className="p-3 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all"
+                  min={getMinDropOffDate()}
+                  className={`p-3 bg-white dark:bg-zinc-800 border ${
+                    dateError ? 'border-red-500' : 'border-gray-200 dark:border-zinc-700'
+                  } rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all`}
                   required
                 />
               </div>
             </div>
+
+            {/* Date Error Message */}
+            {dateError && (
+              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg animate-pulse">
+                <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium">{dateError}</span>
+                </div>
+              </div>
+            )}
 
             <BookingMap
               location={rentalDetails.location}
@@ -317,10 +399,35 @@ const CarDetailPage = () => {
 
             <button
               type="submit"
-              className="mt-4 w-full py-4 bg-orange-500 text-white font-bold rounded-lg shadow-lg shadow-orange-500/30 hover:bg-orange-600 transition-all transform active:scale-95"
+              disabled={!isFormValid() || isSubmitting}
+              className={`mt-4 w-full py-4 font-bold rounded-lg shadow-lg transition-all transform ${
+                isFormValid() && !isSubmitting
+                  ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-500/30 hover:shadow-orange-500/50 active:scale-95 text-white'
+                  : 'bg-gray-300 dark:bg-zinc-700 text-gray-500 dark:text-zinc-400 cursor-not-allowed'
+              }`}
             >
-              Confirm Booking Now
+              {isSubmitting ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Processing...
+                </div>
+              ) : (
+                isFormValid() ? 'Confirm Booking Now' : 'Fill All Fields to Book'
+              )}
             </button>
+
+            {/* Validation Summary */}
+            <div className="mt-4 space-y-2 text-sm text-gray-600 dark:text-zinc-400">
+              <div className={`flex items-center gap-2 ${rentalDetails.pickUpDate ? 'text-green-600' : ''}`}>
+                {rentalDetails.pickUpDate ? '✓' : '○'} Pick-up date selected
+              </div>
+              <div className={`flex items-center gap-2 ${rentalDetails.dropOffDate && !dateError ? 'text-green-600' : ''}`}>
+                {rentalDetails.dropOffDate && !dateError ? '✓' : '○'} Valid drop-off date
+              </div>
+              <div className={`flex items-center gap-2 ${rentalDetails.location ? 'text-green-600' : ''}`}>
+                {rentalDetails.location ? '✓' : '○'} Location selected
+              </div>
+            </div>
           </form>
         </div>
       </div>
