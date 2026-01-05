@@ -38,7 +38,8 @@ function AdvancedControlPanel({
   cameraPos, setCameraPos,
   lighting, setLighting,
   rotation, setRotation,
-  isOpen, setIsOpen 
+  isOpen, setIsOpen,
+  autoRotate, setAutoRotate 
 }) {
   const adjustValue = (category, axis, delta) => {
     if (category === 'position') {
@@ -534,6 +535,8 @@ function Car3DModel() {
         setRotation={setRotation}
         isOpen={isControlOpen}
         setIsOpen={setIsControlOpen}
+        autoRotate={autoRotate}
+        setAutoRotate={setAutoRotate}
       />
 
       <div ref={containerRef} className="relative z-10 w-full h-full" style={{ cursor: "grab" }} />
